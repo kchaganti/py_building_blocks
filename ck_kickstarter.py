@@ -117,17 +117,37 @@ h = sns.FacetGrid(df_kick, hue="state", col="category", margin_titles=True)
 h=h.map(plt.hist, "goal_log",edgecolor="w",bins=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]).add_legend()
 #%% Success by country
 
-main_cats = df_kick["main_category"].value_counts()
-main_cats_failed = df_kick[df_kick["state"] == "failed"]["main_category"].value_counts()
-main_cats_success = df_kick[df_kick["state"] == "successful"]["main_category"].value_counts()
+country_wise = df_kick["country"].value_counts()
+country_wise_failed = df_kick[df_kick["state"] == "failed"]["country"].value_counts()
+country_wise_success = df_kick[df_kick["state"] == "successful"]["country"].value_counts()
 
 #main_cats_failed and main_cats_success are pandas series objects
 
-main_cats_success=main_cats_success.sort_index(ascending=True)
-main_cats_failed=main_cats_failed.sort_index(ascending=True)
+country_wise_success=country_wise_success.sort_index(ascending=True)
+country_wise_failed=country_wise_failed.sort_index(ascending=True)
 
-main_cats_combined = (main_cats_success + main_cats_failed)
+country_wise_combined = (country_wise_success + country_wise_failed)
 
-print(main_cats_success)
-print(main_cats_failed)
+print(country_wise_success)
+print(country_wise_failed)
+
+z1=country_wise_combined.index
+sns.set_color_codes("pastel")
+sns.barplot(y=country_wise_combined,x=z1,color="b",label="Total")
+
+z2=country_wise_success.index
+sns.set_color_codes("muted")
+  
+ax2 =sns.barplot(y=country_wise_success,x=z2,color="b",label="Success")
+ax2.set_xticklabels(ax2.get_xticklabels(),rotation = 70)
+
+
+plt.show()
+
+# All the countries seem to have the same success to fail ratio 1:2
+
+#%% Build a model; do random forests on categories ; certain goal amount ranges and certain categories
+# seem o have a higher success rate than others
+# One-hot encoding on categories?
+# state = success or fail 1 or 0; ignore all others
 
